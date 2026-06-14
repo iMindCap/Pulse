@@ -20,13 +20,25 @@ const navigation = [
       :class="sidebarCollapsed ? 'w-[68px]' : 'w-[240px]'"
     >
       <!-- Logo -->
-      <div class="flex items-center gap-3 px-5 h-16 border-b border-border">
-        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-accent-blue">
-          <span class="text-white text-sm font-bold">⚡</span>
+      <div class="flex items-center gap-3 px-4 py-5 select-none">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center shadow-md shadow-cyan-500/20 transition-transform duration-300 hover:scale-105">
+          <svg
+            class="w-5 h-5 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 12h3l3-9 4 18 3-13 1 4h3"
+            />
+          </svg>
         </div>
         <span
           v-if="!sidebarCollapsed"
-          class="text-text-primary font-semibold text-lg tracking-tight"
+          class="text-text-primary font-bold text-xl tracking-tight transition-all duration-200"
         >
           Pulse
         </span>
