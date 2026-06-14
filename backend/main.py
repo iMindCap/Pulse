@@ -9,9 +9,12 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from config import settings
 from db import init_db
+from api import router
 
 
 @asynccontextmanager
@@ -45,15 +48,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Register API routes
+app.include_router(router)
 
-@app.get("/")
-async def root():
-    """Root endpoint with basic app info."""
-    return {
-        "name": settings.APP_NAME,
-        "version": settings.APP_VERSION,
-        "status": "running",
-    }
+# Serve frontend static files in production
+STATIC_DIR = Path(__file__).parent / "static"
+
+if STATIC_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=STATIC_DIR / "assets"), name="assets")
+
+    @app.get("/{path:path}")
+    async def serve_frontend(path: str):
+        """Serve Vue frontend for all non-API routes."""
+        file_path = STATIC_DIR / path
+        if file_path.exists() and file_path.is_file():
+            return FileResponse(file_path)
+        return FileResponse(STATIC_DIR / "index.html")
+else:
+    @app.get("/")
+    async def root():
+        """Root endpoint when running backend only (development)."""
+        return {
+            "name": settings.APP_NAME,
+            "version": settings.APP_VERSION,
+            "status": "running",
+            "docs": "/docs",
+        }
 
 
 @app.get("/health")

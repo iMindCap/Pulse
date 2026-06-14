@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  pulse:
+    build: .
+    container_name: pulse
+    ports:
+      - "3000:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - pulse_data:/app/data
+    restart: unless-stopped
+    environment:
+      - PULSE_PORT=3000
+
+volumes:
+  pulse_data:
